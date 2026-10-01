@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>𝑽𝑻𝑹 • CHERNOBYL</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root{
+      --bg:var(--tg-theme-bg-color,#0b1020);
+      --card:rgba(255,255,255,.09);
+      --card2:rgba(255,255,255,.05);
+      --text:var(--tg-theme-text-color,#fff);
+      --hint:var(--tg-theme-hint-color,#aeb6c8);
+      --button:var(--tg-theme-button-color,#7c5cff);
+      --bt:var(--tg-theme-button-text-color,#fff);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;color:var(--text);font-family:system-ui,-apple-system,sans-serif;
+      background:radial-gradient(circle at 20% 0%,#4932a855,transparent 35%),
+                 radial-gradient(circle at 100% 30%,#00b8ff33,transparent 35%),var(--bg);
+      padding:18px 14px calc(24px + env(safe-area-inset-bottom));
+    }
+    .wrap{max-width:700px;margin:auto}
+    .glass{
+      background:var(--card);border:1px solid #ffffff20;border-radius:24px;
+      backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      box-shadow:0 14px 45px #0005;
+    }
+    header{padding:20px;margin-bottom:14px}
+    h1{margin:0 0 6px;font-size:25px}
+    .sub{color:var(--hint);font-size:13px}
+    .status{margin-top:14px;padding:10px 13px;border-radius:14px;background:#19c37d22;color:#61e6aa}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+    button{
+      border:0;color:var(--text);background:var(--card);padding:16px 10px;border-radius:20px;
+      font-size:15px;cursor:pointer;border:1px solid #ffffff18;
+    }
+    button:active{transform:scale(.98)}
+    .back{margin-top:14px;width:100%;background:var(--button);color:var(--bt)}
+    .page{display:none}
+    .page.active{display:block}
+    .title{padding:18px 20px;margin-bottom:12px}
+    .row{display:flex;justify-content:space-between;align-items:center;padding:15px 16px;margin:9px 0}
+    .toggle{min-width:95px;padding:9px 12px}
+    .on{background:#19c37d33;color:#62e6aa}
+    .off{background:#ff496633;color:#ff8795}
+    .note{color:var(--hint);font-size:12px;line-height:1.8;padding:12px 4px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section id="home" class="page active">
+    <header class="glass">
+      <h1>𝑽𝑻𝑹 • CHERNOBYL</h1>
+      <div class="sub">پنل شیشه‌ای سلف تلگرام</div>
+      <div class="status">🟢 سلف فعال</div>
+    </header>
+    <div class="grid">
+      <button onclick="openPage('tabchi')">📢 تبچی</button>
+      <button onclick="openPage('clock')">🕐 ساعت</button>
+      <button onclick="openPage('guard')">🛡 نگهبان چت</button>
+      <button onclick="openPage('locks')">🔒 قفل‌ها</button>
+      <button onclick="openPage('auto')">💬 پاسخ خودکار</button>
+      <button onclick="openPage('friends')">👥 دوست و دشمن</button>
+      <button onclick="openPage('logo')">🎨 لوگو</button>
+      <button onclick="openPage('filter')">🚫 فیلتر کلمات</button>
+      <button onclick="openPage('security')">🔐 امنیت</button>
+      <button onclick="openPage('profile')">👤 پروفایل</button>
+      <button onclick="openPage('subscription')">💳 اشتراک من</button>
+      <button onclick="openPage('settings')">⚙️ تنظیمات</button>
+    </div>
+  </section>
+
+  <div id="pages"></div>
+</div>
+
+<script>
+const tg=window.Telegram?.WebApp;
+if(tg){tg.ready();tg.expand();}
+
+const data={
+tabchi:["📢 تبچی","بنرها، مقصدها و زمان‌بندی"],
+clock:["🕐 ساعت","ساعت در نام، بیو و پروفایل"],
+guard:["🛡 نگهبان چت","ذخیره پیام‌های حذف یا ویرایش‌شده"],
+locks:["🔒 قفل‌ها","مدیریت قفل‌های مختلف"],
+auto:["💬 پاسخ خودکار","پاسخ‌های خودکار با حالت‌های تطبیق"],
+friends:["👥 دوست و دشمن","مدیریت فهرست‌ها و پاسخ‌ها"],
+logo:["🎨 لوگو","تنظیم متن و طرح لوگو"],
+filter:["🚫 فیلتر کلمات","افزودن و مدیریت فیلترها"],
+security:["🔐 امنیت","وضعیت امنیت و سرویس"],
+profile:["👤 پروفایل","مدیریت اطلاعات پروفایل خودت"],
+subscription:["💳 اشتراک من","وضعیت و تاریخ انقضای اشتراک"],
+settings:["⚙️ تنظیمات","تنظیمات عمومی پنل"]
+};
+
+function openPage(id){
+  document.getElementById('home').classList.remove('active');
+  const p=document.getElementById('page-'+id);
+  if(!p){
+    const [title,note]=data[id];
+    const sec=document.createElement('section');
+    sec.id='page-'+id; sec.className='page';
+    sec.innerHTML=`<div class="glass title"><h2>${title}</h2><div class="sub">${note}</div></div>
+      <div class="glass" style="padding:8px">
+        ${['التفعيل','الحالة','التنبيهات','التنفيذ التلقائي'].map((x,i)=>`
+        <div class="row"><span>${x}</span><button class="toggle ${i%2?'off':'on'}" onclick="toggle(this)">${i%2?'خاموش ✗':'روشن ✓'}</button></div>`).join('')}
+        <div class="note">این صفحه در حال حاضر رابط کاربری پنل است. اتصال واقعی به سلف از طریق بک‌اند امن انجام می‌شود.</div>
+      </div>
+      <button class="back" onclick="goHome()">↩️ بازگشت</button>`;
+    document.getElementById('pages').appendChild(sec);
+  }
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  p.classList.add('active');
+}
+function toggle(b){
+  const on=b.classList.contains('on');
+  b.classList.toggle('on',!on);b.classList.toggle('off',on);
+  b.textContent=on?'خاموش ✗':'روشن ✓';
+}
+function goHome(){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+}
+</script>
+</body>
+</html>
